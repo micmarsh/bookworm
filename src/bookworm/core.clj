@@ -51,16 +51,13 @@
     (let [sections (contents book)
           streams (resource-streams sections)
           xml-maps (map section-map (resolve-options streams))
-          b (println "shit, about to flatten")
-          flat (flatten xml-maps)
-          n (println "woah shit")]
-        (mapcat #(get % :text) flat)))
+          flat (flatten xml-maps)]
+            (mapcat #(get % :text) flat)))
 
 (defn- to-strings
     ([char-stream]
         (to-strings char-stream 1000))
     ([char-stream length]
-        (println "but")
         (cons
             (apply str (take length char-stream))
             (lazy-seq
