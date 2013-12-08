@@ -1,4 +1,4 @@
-(defproject bookworm "0.1.0"
+(defproject bookworm "0.1.1"
   :description "A Library for Reading Epubs in Clojure"
   :url "https://github.com/micmarsh/bookworm"
   :license {:name "Eclipse Public License"
