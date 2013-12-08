@@ -5,7 +5,9 @@ Read things from
 ## Usage
 
 ### Leiningen
-Coming very soon
+```clojure
+[bookworm 0.1.0]
+```
 
 ### Building From Source
 This project includes a local jar, so be sure to run localrepo before building:
