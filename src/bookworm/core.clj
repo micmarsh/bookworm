@@ -1,5 +1,6 @@
 (ns bookworm.core
-    (:use [clj-xpath.core :only [$x]]
+    (:use [net.cgrand.enlive-html
+          :only [html-resource select]]
           clojure.core.typed
           bookworm.types)
 
@@ -34,27 +35,27 @@
 
 (ann ^:no-check get-title [Book -> (Option String)])
 
-(defn- contents [book]
+(defn contents [book]
     (vec (.getContents book)))
 
-(defn- resource-streams [sections]
+(defn resource-streams [sections]
     (map #(.getInputStream %) sections))
 
-(defn- section-map [xml-stream]
-    (->> xml-stream
-        slurp
-        ($x "//child::p")))
+(defn section-map [xml-stream]
+    (-> xml-stream
+        html-resource
+        (select [:p])))
 
 (def ^:private resolve-options (partial filter identity))
 
-(defn- get-char-stream [book]
+(defn get-char-stream [book]
     (let [sections (contents book)
           streams (resource-streams sections)
           xml-maps (map section-map (resolve-options streams))
           flat (flatten xml-maps)]
-            (mapcat #(get % :text) flat)))
+            (mapcat #(first (get % :content)) flat)))
 
-(defn- to-strings
+(defn to-strings
     ([char-stream]
         (to-strings char-stream 1000))
     ([char-stream length]
