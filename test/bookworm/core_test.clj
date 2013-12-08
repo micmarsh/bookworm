@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [bookworm.core :refer :all]))
 
-(def BOOK "zarathustra")
+(def BOOK "seven-habits")
 (def PATH (str "samples/" BOOK ".epub"))
 
 (def TITLES {"zarathustra"

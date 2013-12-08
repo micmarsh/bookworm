@@ -1,4 +1,5 @@
 (ns bookworm.core
+
     (:use [net.cgrand.enlive-html
           :only [html-resource select]]
           clojure.core.typed
@@ -52,8 +53,10 @@
     (let [sections (contents book)
           streams (resource-streams sections)
           xml-maps (map section-map (resolve-options streams))
-          flat (flatten xml-maps)]
-            (mapcat #(first (get % :content)) flat)))
+          flat (flatten xml-maps)
+          contents (map :content flat)
+          clean (filter (partial every? string?) contents)]
+            (apply concat (map seq clean))))
 
 (defn to-strings
     ([char-stream]
