@@ -25,18 +25,17 @@
         (select [:p])))
 
 (ann ^:no-check resolve-options
-    (All [T]
-        [(Seqable (Option T)) -> (Seqable T)]))
+    (All [t]
+        [(Seqable (Option t)) -> (Seqable t)]))
 (def ^:private resolve-options (partial filter identity))
 
-(ann clojure.core/flatten [(Seqable Seqable) -> Seqable])
-(ann get-char-stream [Book -> CharSeq])
+(ann ^:no-check get-char-stream [Book -> CharSeq])
 (defn get-char-stream [book]
     (let [sections (contents book)
           streams (resource-streams sections)
           xml-maps (map section-map (resolve-options streams))
           flat (flatten xml-maps)
-          contents (map :content flat)
+          contents (map #(get % :content) flat)
           clean (filter (partial every? string?) contents)]
             (apply concat (map seq clean))))
 
