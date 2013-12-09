@@ -74,5 +74,5 @@
     (.getTitle book))
 
 (def ^:private enlive->text #(apply str (emit* %)))
-(def get-html (comp (partial map enlive->text) html-maps))
+(def get-html (comp enlive->text html-maps))
 
