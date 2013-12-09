@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [bookworm.core :refer :all]))
 
-(def BOOK "seven-habits")
+(def BOOK "zarathustra")
 (def PATH (str "samples/" BOOK ".epub"))
 
 (def TITLES {"zarathustra"
@@ -27,6 +27,9 @@
     (let [book (open-book PATH)]
         (testing "Can read the title of the book"
             (is (= (get-title book) TITLE)))
+        ; (testing "get some html"
+        ;     (println (get-html book)))
+        ; Don't have a test for this yet
         (testing "Can create a lazy sequence of the book's contents"
             (let [text (get-text book)]
                 (println text)

@@ -1,7 +1,7 @@
 (ns bookworm.core
 
     (:use [net.cgrand.enlive-html
-          :only [html-resource select]]
+            :only [html-resource select html emit*]]
           clojure.core.typed
           bookworm.types)
 
@@ -29,15 +29,20 @@
         [(Seqable (Option t)) -> (Seqable t)]))
 (def ^:private resolve-options (partial filter identity))
 
-(ann ^:no-check get-char-stream [Book -> CharSeq])
-(defn get-char-stream [book]
+(defn- html-maps [book]
     (let [sections (contents book)
           streams (resource-streams sections)
-          xml-maps (map section-map (resolve-options streams))
-          flat (flatten xml-maps)
-          contents (map #(get % :content) flat)
-          clean (filter (partial every? string?) contents)]
+          xml-maps (map section-map (resolve-options streams))]
+        (flatten xml-maps)))
+
+(defn- sanitize-xml [xml-maps]
+  (let [contents (map #(get % :content) xml-maps)
+        all-strings? (partial every? string?)
+        clean (filter all-strings? contents)]
             (apply concat (map seq clean))))
+
+(ann ^:no-check get-char-stream [Book -> CharSeq])
+(def get-char-stream (comp sanitize-xml html-maps))
 
 (ann clojure.core/take Piece)
 (ann clojure.core/drop Piece)
@@ -67,3 +72,7 @@
 (ann ^:no-check get-title [Book -> (Option String)])
 (defn get-title [book]
     (.getTitle book))
+
+(def ^:private enlive->text #(apply str (emit* %)))
+(def get-html (comp (partial map enlive->text) html-maps))
+
