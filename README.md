@@ -6,7 +6,7 @@ Read things from
 
 ### Leiningen
 ```clojure
-[bookworm 0.2.0]
+[bookworm 0.2.1]
 ```
 
 ### Building From Source
